@@ -1,0 +1,407 @@
+---
+title: "Data Analysis"
+author: "Group 3"
+date: "11/19/2020"
+output:
+  html_document: default
+  pdf_document: default
+  word_document: default
+---
+# Exploratory Data  Analysis
+Before analysis, it is important to understand our data.The data has 150 entries and 5 variables., Boxplots, Histograms and Density plots of each measurement will be plotted with respect to the type of flower \
+
+## Importing the dataset
+The data is imported into the R environment having been saved as a CSV file.\
+The first six entries of the data are as follows\
+
+```{r, echo=FALSE}
+head(iris)
+```
+The dataset has the following variables and  entries\
+```{r, echo=TRUE}
+number_of_entries<-nrow(iris)
+number_of_variables<- ncol(iris)
+ number_of_entries
+number_of_variables
+```
+The data set contain the following different types of variables\
+```{r, echo=FALSE}
+str(iris)
+```
+The summary of the data is as follows\
+```{r, echo=FALSE}
+summary(iris)
+```
+A quick comparison between the variables, specifically petal width,  we filter the flowers with the least measurement of petal width (<0.5) and flowers with highest measurement of petal width (>).\
+```{r, echo=FALSE}
+library(tidyverse)
+library(dplyr)
+head(iris %>% filter(Petal.Width<0.5)) 
+#The folloing has the highest measurement of petal width
+head(iris %>% filter(Petal.Width>2))
+```
+Setosa flowers has the least measurement of petal length while virginica has the highest measurement of petal width. \
+# Data visualization 
+The first visualiation will be the scatter plots of measurements of Petal length and Petal width and the scatter plots of sepal width and sepal length.\
+## Scatter Plots
+```{r}
+library(ggvis)
+iris %>% ggvis(~Petal.Length, ~Petal.Width, fill=~Species) %>% layer_points()
+iris %>% ggvis(~Sepal.Length, ~Sepal.Width, fill=~Species) %>% layer_points()
+```
+The petal length and the petal width have a positive linear relationship, whereby, and increase with the measurements of Petal length, there is also an increase int the petal width measurements\
+##Density and frequency Analysis for sepal length
+```{r,echo=FALSE}
+
+library(ggplot2)
+library(plyr)
+library(gridExtra)
+library(grid)
+sepal_length_hist<-ggplot(data= iris, aes(x=Sepal.Length))+
+  geom_histogram(binwidth=0.25, color= "blue", aes(fill=Species))+
+  xlab("Sepal length (cm)")+
+  ylab("frequency")+
+  ggtitle("Histogram for Sepal Length")+
+  geom_vline(data= iris, aes(xintercept=mean(Sepal.Length)))
+
+sepal_length_hist
+
+```
+##Density and frequency Analysis for Sepal Width
+```{r, echo=FALSE}
+sepal_width_hist<-ggplot(data= iris, aes(x=Sepal.Width))+
+  geom_histogram(binwidth=0.25, color= "blue", aes(fill=Species))+
+  xlab("Sepal Width (cm)")+
+  ylab("frequency")+
+  ggtitle("Histogram for Sepal width")+
+  geom_vline(data= iris, aes(xintercept=mean(Sepal.Width, linetype="dashed")))
+
+sepal_width_hist
+```
+## Density and frequency Analysis forPetal length
+```{r, echo=FALSE}
+petal_length_hist<-ggplot(data= iris, aes(x=Petal.Length))+
+  geom_histogram(binwidth=0.25, color= "blue", aes(fill=Species))+
+  xlab("Petal length (cm)")+
+  ylab("frequency")+
+  ggtitle("Histogram for Petal Length")+
+  geom_vline(data= iris, aes(xintercept=mean(Petal.Length, linetype="dashed")))
+
+petal_length_hist
+```
+## Density and frequency Analysis for Petal Width
+```{r, echo=FALSE}
+petal_width_hist<-ggplot(data= iris, aes(x=Petal.Width))+
+  geom_histogram(binwidth=0.25, color= "blue", aes(fill=Species))+
+  xlab("Petal width (cm)")+
+  ylab("frequency")+
+  ggtitle("Histogram for Petal Width")+
+  geom_vline(data= iris, aes(xintercept=mean(Petal.Width, linetype="dashed")))
+
+petal_width_hist
+```
+
+## Density and frequency analysios for iris dataset
+```{r}
+grid.arrange(sepal_length_hist, sepal_width_hist, petal_length_hist, petal_width_hist, nrow=2,
+             top=textGrob("Iris Frequency Histogram",
+                          gp=gpar(fontsize=15)))
+
+```
+## Density and frequency analysis using density plots for sepal width
+```{r, echo=FALSE}
+sepal_width_den<-ggplot(data=iris, aes(x=Sepal.Width,color= Species, fill=Species))+
+  geom_density(alpha=0.5)+
+  xlab("Sepal Width (cm)")+
+  ylab("Density")+
+  ggtitle("Density PLot of Sepal Width")+
+  geom_vline(data=iris, aes(xintercept=mean(Sepal.Width)))
+sepal_width_den
+
+```
+The plot abaove shows the density plots for the sepal width with repect to different types of flowers. The shape of the density function of each type of a flower  is bell shaped and seems to follow a normal ddistribution.\
+The vertical line show the mean of the Sepal Width.\
+##Density and frequency analysis using density plots for sepal length
+```{r, echo=FALSE}
+sepal_length_den<-ggplot(data=iris, aes(x=Sepal.Length,color= Species, fill=Species))+
+  geom_density(alpha=0.5)+
+  xlab("Sepal Length (cm)")+
+  ylab("Density")+
+  ggtitle("Density PLot of Sepal Length")+
+  geom_vline(data=iris, aes(xintercept=mean(Sepal.Length)))
+sepal_length_den
+
+```
+
+The plot above is the density plot of the sepal length measurement. Setosa flower has the least sepal length and the least variance according to the density plots. All the plots shows that th distribution of each measuremnt of each type of flowers is normal\
+## Data and frequency analysis using density plots for petal length
+```{r,echo=FALSE}
+petal_length_den<-ggplot(data=iris, aes(x=Petal.Length,color= Species, fill=Species))+
+  geom_density(alpha=0.5)+
+  xlab("Petal Length (cm)")+
+  ylab("Density")+
+  ggtitle("Density PLot of Petal Length")+
+  geom_vline(data=iris, aes(xintercept=mean(Petal.Length)))
+petal_length_den
+
+```
+##Data and frequency analysis using density plots for petal width
+```{r, echo=FALSE}
+
+petal_width_den<-ggplot(data=iris, aes(x=Petal.Width,color= Species, fill=Species))+
+  geom_density(alpha=0.5)+
+  xlab("Petal Width (cm)")+
+  ylab("Density")+
+  ggtitle("Density PLot of Petal Width")+
+  geom_vline(data=iris, aes(xintercept=mean(Petal.Width)))
+petal_width_den
+
+
+
+
+
+
+```
+The plot above shows the density plot of Petal width.\
+##iris density plots
+```{r}
+grid.arrange(sepal_length_den,sepal_width_den,petal_length_den,petal_width_den, nrow=2, top=textGrob("Iris Density Plots", gp=gpar(fontsiz=15)))
+```
+
+## Data Analysis using Boxplots for Sepal Width
+```{r,echo=FALSE}
+sepal_width_box<- ggplot(data=iris, aes(Species, Sepal.Width, fill= Species))+
+  geom_boxplot()+
+  scale_y_continuous("Sepal Width (cm)")+
+  ggtitle("Box Plot of Sepal Width")
+sepal_width_box
+```
+
+Data Analysis using Boxplots for Sepal Length
+```{r,echo=FALSE}
+sepal_length_box<- ggplot(data=iris, aes(Species, Sepal.Length, fill= Species))+
+  geom_boxplot()+
+  scale_y_continuous("Sepal Length (cm)")+
+  ggtitle("Box Plot of Sepal Length")
+sepal_length_box
+```
+Data Analysis using Boxplots for Petal Length
+```{r,echo=FALSE}
+petaL_length_box<- ggplot(data=iris, aes(Species, Petal.Length, fill= Species))+
+  geom_boxplot()+
+  scale_y_continuous("Petal Length (cm)")+
+  ggtitle("Box Plot of Petal Length")
+petaL_length_box
+```
+Data Analysis using Boxplots for Petal Width
+```{r,echo=FALSE}
+petaL_width_box<- ggplot(data=iris, aes(Species, Petal.Width, fill= Species))+
+  geom_boxplot()+
+  scale_y_continuous("Petal Width (cm)")+
+  ggtitle("Box Plot of Petal Width")
+petaL_width_box
+
+```
+
+# Iris Boxplots
+```{r,echo=FALSE}
+grid.arrange(sepal_width_box,sepal_length_box,petaL_length_box, petaL_width_box, nrow=2,top=textGrob("Iris Boxplot",gp=gpar(fontsize=15)))
+```
+
+## Analyzing of Petals 
+The relationship between petal length anfd petal width can be found by creating a ggplot between the petal length and the petal width\
+```{r}
+# Creating a "ggplot" between Petal Length and Petal Width
+ggplot(data = iris, aes(x=Petal.Length, y=Petal.Width, color=Species)) +
+  xlab("Petal Length") +
+  ylab("Petal Width") +
+# "geom_point" for adding a points
+  geom_point(aes(color = Species, shape = Species)) +
+# "stat_smooth" for adding regression lines with confidence interval of 99%
+  stat_smooth(method='lm', level = 0.99) +
+  ggtitle("Petal Length vs Petal Width")
+  
+```
+
+## Relationship between  length and sepal length
+```{r}
+ggplot(data = iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
+  xlab("Sepal Length") +
+  ylab("Sepal Width") +
+# "geom_point" for adding a points
+  geom_point(aes(color = Species, shape = Species)) +
+# "stat_smooth" for adding regression lines with confidence interval of 99%
+  stat_smooth(method='lm', level = 0.99) +
+  ggtitle("Sepal Length vs Sepal Width")
+```
+
+##Corelation among the four variables
+```{r}
+library(GGally) # To reduce the complexity of combining geometric objects
+# Creating Correlation plot
+ggpairs(data = iris[1:4],
+# Adding title to the plot
+        title = "Iris Correlation Plot",
+# Setting plot type as correlation values for upper diagonal
+        upper = list(continuous = wrap("cor", size = 5)), 
+# Setting plot type as linear regression plots for lower diagonal
+        lower = list(continuous = "smooth"))
+```
+## Correlation Matrix for Iris Dataset
+```{r}
+round(cor(iris[1:4]), 2) 
+ 
+```
+
+
+
+## Applying KNN model
+Knn will work well in our model bulding because of the low dimensionability due to few parameters.
+We encode the target features to differentiate them
+```{r}
+Species<- factor(iris$Species)
+
+
+```
+
+
+We split the data into Training and Testing sets.
+```{r}
+library(caTools)
+set.seed(100) # for Random number generator
+split<- sample.split(Species, SplitRatio = 0.8)
+training<- subset(iris, split==TRUE)
+testing<-subset(iris, split==FALSE)
+
+```
+
+We scale the training set and the test set in exception of the last column of Species\
+
+```{r}
+train<- scale(training[-5])
+test<- scale(testing[-5])
+
+```
+
+We are now goig to fit the model\
+```{r, echo=FALSE}
+library(class)
+prediction<-knn(train =   train, test = test, cl= training[ ,5], k=5, prob=TRUE)
+prediction
+```
+## Making confusion Matrix
+```{r, echo=FALSE}
+table(testing[,5], prediction)
+```
+
+
+Evaluating model Performance\
+```{r, echo=FALSE}
+library(gmodels)
+CrossTable(x= testing$Species, y= prediction)
+## Checking model performance using cross tabulation
+
+```
+## Plotting iris
+```{r, echo=FALSE}
+plot(iris)
+```
+We eliminate sepal width in our model because it shows less effect on the model, and re-do the process of model making\
+
+```{r,echo=FALSE}
+train2<-train[,-2]
+test2<-test[,-2]
+new_prediction<- knn(train = train2, test = test2, cl=training[,5], prob = TRUE)
+new_prediction
+## new confusion matrix
+table(testing[,5], new_prediction)
+```
+Evaluating the new model performance, we use a cross tabulation\
+```{r, echo=FALSE}
+library(gmodels)
+CrossTable(x= testing$Species, y= new_prediction)
+```
+
+The second model is accurate and can be used for future predictions\
+
+
+
+
+
+##TESTING OF HYPOTHESIS for the equality of mean sepal width across all flowers 
+```{r, echo=FALSE}
+library(dplyr)
+setosa_sepal<-iris %>% filter(Species== "setosa")
+mean_setosa<-mean(setosa_sepal$Sepal.Width)
+## Mean petal length for versicolor
+versicolor_sepal<-iris %>% filter(Species== "versicolor")
+mean_versicolor<-mean(versicolor_sepal$Sepal.Width)
+## mean petal lengh for virginica 
+virginica_sepal<-iris %>% filter(Species== "virginica")
+mean_virginica<-mean(virginica_sepal$Sepal.Width)
+## Testing the hypothesis of equlaity of means at 95% confidence int
+p<-aov(setosa_sepal$Sepal.Width~ versicolor_sepal$Sepal.Width+virginica_sepal$Sepal.Width)
+p
+```
+
+
+## Data Analyss
+```{r}
+dat <- iris
+library(ggpubr)
+
+# Edit from here
+x <- which(names(dat) == "Species") # name of grouping variable
+y <- which(names(dat) == "Sepal.Length" # names of variables to test
+| names(dat) == "Sepal.Width"
+| names(dat) == "Petal.Length"
+| names(dat) == "Petal.Width")
+method1 <- "anova" # one of "anova" or "kruskal.test"
+method2 <- "t.test" # one of "wilcox.test" or "t.test"
+my_comparisons <- list(c("setosa", "versicolor"), c("setosa", "virginica"), c("versicolor", "virginica")) # comparisons for post-hoc tests
+# Edit until here
+
+
+# Edit at your own risk
+for (i in y) {
+  for (j in x) {
+    p <- ggboxplot(dat,
+      x = colnames(dat[j]), y = colnames(dat[i]),
+      color = colnames(dat[j]),
+      legend = "none",
+      palette = "npg",
+      add = "jitter"
+    )
+    print(
+      p + stat_compare_means(aes(label = paste0(..method.., ", p-value = ", ..p.format.., " (", ifelse(..p.adj.. > 0.05, "not significant", ..p.signif..), ")")),
+        method = method1, label.y = max(dat[, i], na.rm = TRUE)
+      )
+      + stat_compare_means(comparisons = my_comparisons, method = method2, label = "p.format") # remove if p-value of ANOVA or Kruskal-Wallis test >= 0.05
+    )
+  }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
