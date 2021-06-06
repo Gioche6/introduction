@@ -1,6 +1,6 @@
 ---
 title: "Data Analysis"
-author: "Group 3"
+author: "Gioche Dennis "
 date: "11/19/2020"
 output:
   html_document: default
